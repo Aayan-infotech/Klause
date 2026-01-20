@@ -25,6 +25,9 @@ app.use(express.static("public"));
 app.use(cookieParser());
 
 app.use("/api", languageMiddleware, routes);
+app.get("/", (req, res) => {
+  res.send("Testing .....");
+});
 dotenv.config();
 const PORT = secret.PORT || 5000;
 const MONGODB_URI =
