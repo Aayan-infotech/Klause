@@ -8,6 +8,7 @@ import { sendEmail } from "../utils/sendEmail.js";
 import { generateOTP } from "../utils/helperFunctions.js";
 import { emailTamplates } from "../utils/emailTemplate.js";
 import { verify } from "crypto";
+import { checkUsernameAvailability } from "../services/userAvailability.service.js";
 
 const secret = await loadConfig();
 
@@ -54,47 +55,59 @@ const signup = asyncHandler(async (req, res) => {
       "Email is already registered. Please use a different email. Go to Login to proceed further."
     );
   }
-  const otp = await generateOTP(6);
 
-  const emailTemplate = emailTamplates.signupOTP(otp);
+  let nextStep = 2;
 
-  const emailResponse = await sendEmail({
+  const verifiedEmailUser = await User.findOne({
     email: userEmail,
-    subject: emailTemplate.subject,
-    body: emailTemplate.body,
-  });
-
-  if (!emailResponse.success) {
-    throw new ApiError(500, "FAILED_TO_SEND_OTP_EMAIL", req.lang);
-  }
-
-  // update the OTP and its expiry time in the database
-  let existingUser = await User.findOne({
-    email: userEmail,
+    isEmailVerified: true,
     isRegistered: false,
   });
-  if (existingUser) {
-    existingUser.otp = otp;
-    existingUser.otpExpire = Date.now() + 10 * 60 * 1000;
-    existingUser.isRegistered = false;
-    existingUser.updatedAt = Date.now();
-    existingUser.registrationStep = 1;
-    await existingUser.save({ validateBeforeSave: false });
-  } else {
-    const newUser = new User({
+  if (!verifiedEmailUser) {
+    const otp = await generateOTP(6);
+
+    const emailTemplate = emailTamplates.signupOTP(otp);
+
+    const emailResponse = await sendEmail({
       email: userEmail,
-      otp: otp,
-      otpExpire: Date.now() + 10 * 60 * 1000,
-      isRegistered: false,
-      registrationStep: 1,
+      subject: emailTemplate.subject,
+      body: emailTemplate.body,
     });
-    await newUser.save({ validateBeforeSave: false });
+
+    if (!emailResponse.success) {
+      throw new ApiError(500, "FAILED_TO_SEND_OTP_TO_EMAIL", req.lang);
+    }
+
+    // update the OTP and its expiry time in the database
+    let existingUser = await User.findOne({
+      email: userEmail,
+      isRegistered: false,
+    });
+    if (existingUser) {
+      existingUser.otp = otp;
+      existingUser.otpExpire = Date.now() + 10 * 60 * 1000;
+      existingUser.isRegistered = false;
+      existingUser.updatedAt = Date.now();
+      existingUser.registrationStep = 1;
+      await existingUser.save({ validateBeforeSave: false });
+    } else {
+      const newUser = new User({
+        email: userEmail,
+        otp: otp,
+        otpExpire: Date.now() + 10 * 60 * 1000,
+        isRegistered: false,
+        registrationStep: 1,
+      });
+      await newUser.save({ validateBeforeSave: false });
+    }
+  } else {
+    nextStep = 3;
   }
 
   return res.status(200).json(
     new ApiResponse(200, "OTP_SENT_TO_EMAIL_SUCCESSFULLY", req.lang, {
       email: userEmail,
-      nextStep: "VERIFY_OTP",
+      nextStep: nextStep,
     })
   );
 });
@@ -123,11 +136,21 @@ const verifyOtp = asyncHandler(async (req, res) => {
   user.otp = null;
   user.otpExpire = null;
   user.isEmailVerified = true;
+  user.registrationStep = 2;
   await user.save();
 
-  return res
-    .status(200)
-    .json(new ApiResponse(200, "OTP_VERIFIED_SUCCESSFULLY", req.lang, user));
+  // generate access and refresh tokens
+  const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
+    user._id
+  );
+
+  return res.status(200).json(
+    new ApiResponse(200, "OTP_VERIFIED_SUCCESSFULLY", req.lang, {
+      accessToken,
+      refreshToken,
+      nextStep: 3,
+    })
+  );
 });
 
 const resendOTP = asyncHandler(async (req, res) => {
@@ -156,26 +179,25 @@ const resendOTP = asyncHandler(async (req, res) => {
     throw new ApiError(500, "FAILED_TO_SEND_OTP_TO_EMAIL", req.lang);
   }
 
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(200, "OTP_SENT_TO_EMAIL_SUCCESSFULLY", req.lang, {
-        email,
-      })
-    );
+  return res.status(200).json(
+    new ApiResponse(200, "OTP_SENT_TO_EMAIL_SUCCESSFULLY", req.lang, {
+      email,
+    })
+  );
 });
 
 const joinAs = asyncHandler(async (req, res) => {
-  const { role } = req.body;
+  const { email, role } = req.body;
   const user = req.user;
   if (!role) {
     throw new ApiError(400, "ROLE_IS_REQUIRED", req.lang);
   }
-  if(!["owner","manager","guest"].includes(role)){
+  if (!["owner", "manager", "guest"].includes(role)) {
     throw new ApiError(400, "INVALID_ROLE", req.lang);
   }
 
   user.role = role;
+  user.registrationStep = 3;
   await user.save();
 
   return res
@@ -183,4 +205,44 @@ const joinAs = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, "ROLE_JOINED_SUCCESSFULLY", req.lang, user));
 });
 
-export { signup, verifyOtp, resendOTP , joinAs };
+const createCredential = asyncHandler(async (req, res) => {
+  const { username, password, confirmPassword } = req.body;
+  const user = req.user;
+
+  user.username = username;
+  user.password = password;
+  user.registrationStep = 4;
+  await user.save();
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, "CREDENTIALS_CREATED_SUCCESSFULLY", req.lang, user)
+    );
+});
+
+const usernameAvailability = asyncHandler(async (req, res) => {
+  const { username } = req.params;
+  const isUsernameAvailable = await checkUsernameAvailability(username);
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      isUsernameAvailable
+        ? "USERNAME_IS_AVAILABLE"
+        : "USERNAME_IS_NOT_AVAILABLE",
+      req.lang,
+      {
+        isAvailable: isUsernameAvailable,
+      }
+    )
+  );
+});
+
+export {
+  signup,
+  verifyOtp,
+  resendOTP,
+  joinAs,
+  createCredential,
+  usernameAvailability,
+};

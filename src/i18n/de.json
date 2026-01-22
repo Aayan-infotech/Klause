@@ -1,6 +1,6 @@
 {
   "SUCCESS": "Erfolg",
-  "LOGIN_SUCCESS": "Login erfolgreich",
+  "LOGIN_SUCCESS": "Anmeldung erfolgreich",
   "INVALID_CREDENTIALS": "Ungültige E-Mail oder Passwort",
   "SERVER_ERROR": "Interner Serverfehler",
 
@@ -20,5 +20,35 @@
     "E-Mail-Format ist ungültig. Es darf nicht mit Sonderzeichen beginnen",
 
   "FAILED_TO_SEND_OTP_TO_EMAIL": "OTP konnte nicht an die E-Mail gesendet werden",
-  "OTP_SENT_TO_EMAIL_SUCCESSFULLY": "OTP erfolgreich an die E-Mail gesendet"
+  "OTP_SENT_TO_EMAIL_SUCCESSFULLY": "OTP erfolgreich an die E-Mail gesendet",
+
+  "EMAIL_AND_OTP_ARE_REQUIRED": "E-Mail und OTP sind erforderlich",
+  "INVALID_OTP": "Ungültiges OTP",
+  "OTP_EXPIRED": "OTP abgelaufen",
+  "OTP_VERIFIED_SUCCESSFULLY": "OTP erfolgreich verifiziert",
+
+  "ROLE_IS_REQUIRED": "Rolle ist erforderlich",
+  "INVALID_ROLE": "Ungültige Rolle",
+  "ROLE_JOINED_SUCCESSFULLY": "Rolle erfolgreich zugewiesen",
+
+  "USERNAME_MUST_BE_STRING": "Benutzername muss eine Zeichenkette sein",
+  "USERNAME_IS_REQUIRED": "Benutzername ist erforderlich",
+  "USERNAME_MUST_BE_AT_LEAST_3_CHARACTERS_LONG": "Benutzername muss mindestens 3 Zeichen lang sein",
+  "USERNAME_MUST_NOT_EXCEED_30_CHARACTERS": "Benutzername darf 30 Zeichen nicht überschreiten",
+
+  "PASSWORD_IS_REQUIRED": "Passwort ist erforderlich",
+  "PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS_LONG_AND_INCLUDE_AT_LEAST_ONE_LOWERCASE_LETTER_ONE_UPPERCASE_LETTER_ONE_NUMBER_AND_ONE_SPECIAL_CHARACTER":
+    "Passwort muss mindestens 8 Zeichen lang sein und Kleinbuchstaben, Großbuchstaben, Zahlen und Sonderzeichen enthalten.",
+  "PASSWORD_CANNOT_EXCEED_15_CHARACTERS_LONG_AND_INCLUDE_AT_LEAST_ONE_LOWERCASE_LETTER_ONE_UPPERCASE_LETTER_ONE_NUMBER_AND_ONE_SPECIAL_CHARACTER":
+    "Passwort darf 15 Zeichen nicht überschreiten und muss alle Bedingungen erfüllen.",
+  "PASSWORD_MUST_BE_STRING": "Passwort muss eine Zeichenkette sein",
+
+  "CONFIRM_PASSWORD_MUST_BE_STRING": "Bestätigungspasswort muss eine Zeichenkette sein",
+  "CONFIRM_PASSWORD_IS_REQUIRED": "Bestätigungspasswort ist erforderlich",
+  "PASSWORD_AND_CONFIRM_PASSWORD_MUST_MATCH": "Passwort und Bestätigungspasswort müssen übereinstimmen",
+
+  "CREDENTIALS_CREATED_SUCCESSFULLY": "Zugangsdaten erfolgreich erstellt",
+  "USER_REGISTERED_SUCCESSFULLY": "Benutzer erfolgreich registriert",
+  "USERNAME_IS_NOT_AVAILABLE": "Benutzername ist nicht verfügbar",
+  "USERNAME_IS_AVAILABLE": "Benutzername ist verfügbar"
 }

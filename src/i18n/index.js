@@ -6,9 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const loadLang = (file) => {
-  return JSON.parse(
-    fs.readFileSync(path.join(__dirname, file), "utf-8")
-  );
+  return JSON.parse(fs.readFileSync(path.join(__dirname, file), "utf-8"));
 };
 
 const languages = {
@@ -20,6 +18,14 @@ const languages = {
   it: loadLang("it.json"),
 };
 
-export const t = (lang = "en", key) => {
-  return languages[lang]?.[key] || languages.en[key] || key;
+export const t = (lang = "en", key, params = {}) => {
+  let message = languages[lang]?.[key] || languages.en[key] || key;
+  console.log("message", message);
+  console.log("params", params);
+
+  Object.entries(params).forEach(([param, value]) => {
+    message = message.replace(new RegExp(`{{${param}}}`, "g"), value);
+  });
+
+  return message;
 };

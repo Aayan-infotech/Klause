@@ -33,5 +33,35 @@
 
   "ROLE_IS_REQUIRED": "Role is required",
   "INVALID_ROLE": "Invalid Role",
-  "ROLE_JOINED_SUCCESSFULLY": "Role joined successfully"
+  "ROLE_JOINED_SUCCESSFULLY": "Role joined successfully",
+
+  "USERNAME_MUST_BE_STRING": "Username must be string",
+  "USERNAME_IS_REQUIRED": "Username is required",
+  "USERNAME_MUST_BE_AT_LEAST_3_CHARACTERS_LONG": "Username must be at least 3 characters long",
+  "USERNAME_MUST_NOT_EXCEED_30_CHARACTERS": "Username must not exceed 30 characters",
+
+  "PASSWORD_IS_REQUIRED": "Password is required",
+  "PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS_LONG_AND_INCLUDE_AT_LEAST_ONE_LOWERCASE_LETTER_ONE_UPPERCASE_LETTER_ONE_NUMBER_AND_ONE_SPECIAL_CHARACTER": "Password must be at least 8 characters long and include at least one lowercase letter, one uppercase letter, one number, and one special character (@$!%*?&#).",
+  "PASSWORD_CANNOT_EXCEED_15_CHARACTERS_LONG_AND_INCLUDE_AT_LEAST_ONE_LOWERCASE_LETTER_ONE_UPPERCASE_LETTER_ONE_NUMBER_AND_ONE_SPECIAL_CHARACTER": "Password cannot exceed 15 characters long and include at least one lowercase letter, one uppercase letter, one number, and one special character (@$!%*?&#).",
+  "PASSWORD_MUST_BE_STRING": "Password must be string",
+
+  "CONFIRM_PASSWORD_MUST_BE_STRING": "Confirm Password must be string",
+  "CONFIRM_PASSWORD_IS_REQUIRED": "Confirm Password is required",
+  "PASSWORD_AND_CONFIRM_PASSWORD_MUST_MATCH": "Password and Confirm Password must match",
+
+  "CREDENTIALS_CREATED_SUCCESSFULLY": "Credentials created successfully",
+  "USER_REGISTERED_SUCCESSFULLY": "User registered successfully",
+  "USERNAME_IS_NOT_AVAILABLE": "Username is not available",
+  "USERNAME_IS_AVAILABLE": "Username is available",
+
+  "FIELD_REQUIRED": "{{field}} is required",
+  "FIELD_MUST_BE_STRING": "{{field}} must be a string",
+  "FIELD_MIN_LENGTH": "{{field}} must be at least {{min}} characters",
+  "FIELD_MAX_LENGTH": "{{field}} must not exceed {{max}} characters",
+
+  "FIELD_EMAIL": "Email",
+  "FIELD_USERNAME": "Username",
+  "FIELD_PASSWORD": "Password",
+  "FIELD_CONFIRM_PASSWORD": "Confirm Password",
+  "FIELD_COMPANY_NAME": "Company Name"
 }

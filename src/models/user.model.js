@@ -25,12 +25,22 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    role: {
+      type: String,
+      enum: ["owner", "manager", "guest"],
+      default: "guest",
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
 
     username: {
       type: String,
-      unique: true,
       sparse: true,
+      lowercase: true,
       trim: true,
+      default: undefined,
     },
 
     password: {

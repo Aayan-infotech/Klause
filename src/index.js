@@ -6,6 +6,7 @@ import connectDB from "./config/dbConfig.js";
 import cookieParser from "cookie-parser";
 import { languageMiddleware } from "./middlewares/language.middleware.js";
 import { loadConfig } from "./config/loadConfig.js";
+import redis from "./config/redis.js";
 
 const secret = await loadConfig();
 
