@@ -55,5 +55,25 @@
   "FIELD_MAX_LENGTH": "{{field}} {{max}} अक्षरों से अधिक नहीं हो सकता",
 
   "FIELD_EMAIL": "ईमेल",
-  "FIELD_USERNAME": "यूज़रनेम"
+  "FIELD_USERNAME": "यूज़रनेम",
+  "FIELD_PASSWORD": "पासवर्ड",
+  "FIELD_CONFIRM_PASSWORD": "पासवर्ड की पुष्टि करें",
+  "FIELD_COMPANY_NAME": "कंपनी का नाम",
+  "FIELD_FIRST_NAME": "पहला नाम",
+  "FIELD_LAST_NAME": "अंतिम नाम",
+  "FIELD_GENDER": "लिंग",
+  "FIELD_COUNTRY": "देश",
+  "FIELD_DESCRIPTION_OF_COMPANY": "कंपनी का विवरण",
+  "FIELD_PHONE": "फ़ोन नंबर",
+  "FIELD_ALTERNATE_PHONE": "वैकल्पिक फ़ोन नंबर",
+  "FIELD_MAIN_ADDRESS_STREET": "मुख्य पता – सड़क",
+  "FIELD_MAIN_ADDRESS_NO": "मुख्य पता – नंबर",
+  "FIELD_MAIN_ADDRESS_POST_CODE": "मुख्य पता – पिन कोड",
+  "FIELD_MAIN_ADDRESS_CITY": "मुख्य पता – शहर",
+  "FIELD_BILLING_ADDRESS_STREET": "बिलिंग पता – सड़क",
+  "FIELD_BILLING_ADDRESS_NO": "बिलिंग पता – नंबर",
+  "FIELD_BILLING_ADDRESS_POST_CODE": "बिलिंग पता – पिन कोड",
+  "FIELD_BILLING_ADDRESS_CITY": "बिलिंग पता – शहर",
+  "FIELD_VATID": "वैट आईडी",
+  "FIELD_COUNTRY_CODE": "देश कोड"
 }

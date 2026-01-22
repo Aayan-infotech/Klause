@@ -6,10 +6,12 @@ import {
   joinAs,
   createCredential,
   usernameAvailability,
+  saveOwnerDetails,
 } from "../controllers/auth.controller.js";
 import { validateRequest } from "../middlewares/validation.middleware.js";
 import {
   createCredentialsValidationSchema,
+  ownerDetailsSchema,
   // loginValidationSchema,
   userValidationSchema,
 } from "../validators/userValidator.js";
@@ -25,6 +27,6 @@ router.post("/resend-otp", resendOTP);
 router.post("/joinAs",authenticatedUser,joinAs);
 router.post("/create-credientials", authenticatedUser, validateRequest(createCredentialsValidationSchema),createCredential);
 router.get('/username-availability/:username', authenticatedUser, usernameAvailability);
-router.post('/save-owner-details',authenticatedUser,validateRequest());
+router.post('/save-owner-details',authenticatedUser,validateRequest(ownerDetailsSchema),saveOwnerDetails);
 
 export default router;

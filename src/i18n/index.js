@@ -20,9 +20,6 @@ const languages = {
 
 export const t = (lang = "en", key, params = {}) => {
   let message = languages[lang]?.[key] || languages.en[key] || key;
-  console.log("message", message);
-  console.log("params", params);
-
   Object.entries(params).forEach(([param, value]) => {
     message = message.replace(new RegExp(`{{${param}}}`, "g"), value);
   });

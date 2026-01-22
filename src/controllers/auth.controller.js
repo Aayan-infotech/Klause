@@ -206,7 +206,7 @@ const joinAs = asyncHandler(async (req, res) => {
 });
 
 const createCredential = asyncHandler(async (req, res) => {
-  const { username, password, confirmPassword } = req.body;
+  const { username, password } = req.body;
   const user = req.user;
 
   user.username = username;
@@ -238,6 +238,34 @@ const usernameAvailability = asyncHandler(async (req, res) => {
   );
 });
 
+const saveOwnerDetails = asyncHandler(async (req, res) => {
+  const {
+    companyName,
+    firstName,
+    lastName,
+    gender,
+    country,
+    descriptionOfCompany,
+    phone,
+    alternatePhone,
+    mainAddressStreet,
+    mainAddressNo,
+    mainAddressPostCode,
+    mainAddressCity,
+    billingAddressStreet,
+    billingAddressNo,
+    billingAddressPostCode,
+    billingAddressCity,
+    VATId,
+    CountryCode,
+  } = req.body;
+
+  const user  = req.user;
+  
+
+
+});
+
 export {
   signup,
   verifyOtp,
@@ -245,4 +273,5 @@ export {
   joinAs,
   createCredential,
   usernameAvailability,
+  saveOwnerDetails,
 };

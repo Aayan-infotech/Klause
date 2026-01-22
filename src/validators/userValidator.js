@@ -53,13 +53,123 @@ const createCredentialsValidationSchema = Joi.object({
 });
 
 const ownerDetailsSchema = Joi.object({
-  companyName: Joi.string().min(1).max(150).required().messages({
+  companyName: Joi.string().trim().min(1).max(250).required().messages({
     "string.base": "FIELD_MUST_BE_STRING",
-    "string.empty": "Company Name is required.",
-    "string.min": "Company Name must be at least 1 characters.",
-    "string.max": "Company Name cannot exceed 150 characters.",
-    "any.required": "Company Name is required.",
+    "string.empty": "FIELD_REQUIRED",
+    "string.min": "FIELD_MIN_LENGTH",
+    "string.max": "FIELD_MAX_LENGTH",
+    "any.required": "FIELD_REQUIRED",
+  }),
+
+  firstName: Joi.string().trim().min(1).max(50).required().messages({
+    "string.base": "FIELD_MUST_BE_STRING",
+    "string.empty": "FIELD_REQUIRED",
+    "string.min": "FIELD_MIN_LENGTH",
+    "string.max": "FIELD_MAX_LENGTH",
+    "any.required": "FIELD_REQUIRED",
+  }),
+
+  lastName: Joi.string().trim().min(1).max(50).required().messages({
+    "string.base": "FIELD_MUST_BE_STRING",
+    "string.empty": "FIELD_REQUIRED",
+    "string.min": "FIELD_MIN_LENGTH",
+    "string.max": "FIELD_MAX_LENGTH",
+    "any.required": "FIELD_REQUIRED",
+  }),
+
+  gender: Joi.string().valid("male", "female", "other").required().messages({
+    "any.only": "INVALID_GENDER",
+    "any.required": "FIELD_REQUIRED",
+  }),
+
+  country: Joi.string().trim().min(2).max(100).required().messages({
+    "string.base": "FIELD_MUST_BE_STRING",
+    "string.empty": "FIELD_REQUIRED",
+    "string.min": "FIELD_MIN_LENGTH",
+    "string.max": "FIELD_MAX_LENGTH",
+    "any.required": "FIELD_REQUIRED",
+  }),
+
+  descriptionOfCompany: Joi.string()
+    .trim()
+    .min(10)
+    .max(1000)
+    .required()
+    .messages({
+      "string.base": "FIELD_MUST_BE_STRING",
+      "string.empty": "FIELD_REQUIRED",
+      "string.min": "FIELD_MIN_LENGTH",
+      "string.max": "FIELD_MAX_LENGTH",
+      "any.required": "FIELD_REQUIRED",
+    }),
+
+  phone: Joi.string()
+    .pattern(/^\+?[0-9]{7,15}$/)
+    .required()
+    .messages({
+      "string.empty": "FIELD_REQUIRED",
+      "string.pattern.base": "PHONE_NUMBER_IS_INVALID",
+      "any.required": "FIELD_REQUIRED",
+    }),
+
+  alternatePhone: Joi.string()
+    .pattern(/^\+?[0-9]{7,15}$/)
+    .optional()
+    .allow("")
+    .messages({
+      "string.pattern.base": "PHONE_NUMBER_IS_INVALID",
+    }),
+
+  mainAddressStreet: Joi.string().trim().allow("").optional().messages({
+    "string.base": "FIELD_MUST_BE_STRING",
+  }),
+
+  mainAddressNo: Joi.string().trim().allow("").optional().messages({
+    "string.base": "FIELD_MUST_BE_STRING",
+  }),
+
+  mainAddressPostCode: Joi.string().trim().allow("").optional().messages({
+    "string.base": "FIELD_MUST_BE_STRING",
+  }),
+
+  mainAddressCity: Joi.string().trim().allow("").optional().messages({
+    "string.base": "FIELD_MUST_BE_STRING",
+  }),
+
+  billingAddressStreet: Joi.string().trim().allow("").optional().messages({
+    "string.base": "FIELD_MUST_BE_STRING",
+  }),
+
+  billingAddressNo: Joi.string().trim().allow("").optional().messages({
+    "string.base": "FIELD_MUST_BE_STRING",
+  }),
+
+  billingAddressPostCode: Joi.string().trim().allow("").optional().messages({
+    "string.base": "FIELD_MUST_BE_STRING",
+  }),
+
+  billingAddressCity: Joi.string().trim().allow("").optional().messages({
+    "string.base": "FIELD_MUST_BE_STRING",
+  }),
+
+  VATId: Joi.string()
+    .trim()
+    .pattern(/^[A-Z0-9\-]{5,20}$/)
+    .allow("")
+    .optional()
+    .messages({
+      "string.pattern.base": "VAT_ID_IS_INVALID",
+    }),
+
+  CountryCode: Joi.string().length(2).uppercase().required().messages({
+    "string.empty":"FIELD_REQUIRED",
+    "string.length": "COUNTRY_CODE_MUST_BE_ISO_2",
+    "any.required": "FIELD_REQUIRED",
   }),
 });
 
-export { userValidationSchema, createCredentialsValidationSchema };
+export {
+  userValidationSchema,
+  createCredentialsValidationSchema,
+  ownerDetailsSchema,
+};

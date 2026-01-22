@@ -50,5 +50,38 @@
   "CREDENTIALS_CREATED_SUCCESSFULLY": "Zugangsdaten erfolgreich erstellt",
   "USER_REGISTERED_SUCCESSFULLY": "Benutzer erfolgreich registriert",
   "USERNAME_IS_NOT_AVAILABLE": "Benutzername ist nicht verfügbar",
-  "USERNAME_IS_AVAILABLE": "Benutzername ist verfügbar"
+  "USERNAME_IS_AVAILABLE": "Benutzername ist verfügbar",
+
+
+
+
+
+
+
+
+
+
+
+  "FIELD_EMAIL": "E-Mail",
+  "FIELD_USERNAME": "Benutzername",
+  "FIELD_PASSWORD": "Passwort",
+  "FIELD_CONFIRM_PASSWORD": "Passwort bestätigen",
+  "FIELD_COMPANY_NAME": "Firmenname",
+  "FIELD_FIRST_NAME": "Vorname",
+  "FIELD_LAST_NAME": "Nachname",
+  "FIELD_GENDER": "Geschlecht",
+  "FIELD_COUNTRY": "Land",
+  "FIELD_DESCRIPTION_OF_COMPANY": "Unternehmensbeschreibung",
+  "FIELD_PHONE": "Telefonnummer",
+  "FIELD_ALTERNATE_PHONE": "Alternative Telefonnummer",
+  "FIELD_MAIN_ADDRESS_STREET": "Hauptadresse – Straße",
+  "FIELD_MAIN_ADDRESS_NO": "Hauptadresse – Hausnummer",
+  "FIELD_MAIN_ADDRESS_POST_CODE": "Hauptadresse – Postleitzahl",
+  "FIELD_MAIN_ADDRESS_CITY": "Hauptadresse – Stadt",
+  "FIELD_BILLING_ADDRESS_STREET": "Rechnungsadresse – Straße",
+  "FIELD_BILLING_ADDRESS_NO": "Rechnungsadresse – Hausnummer",
+  "FIELD_BILLING_ADDRESS_POST_CODE": "Rechnungsadresse – Postleitzahl",
+  "FIELD_BILLING_ADDRESS_CITY": "Rechnungsadresse – Stadt",
+  "FIELD_VATID": "USt-IdNr.",
+  "FIELD_COUNTRY_CODE": "Ländercode"
 }

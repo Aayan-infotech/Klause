@@ -44,6 +44,7 @@
   "PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS_LONG_AND_INCLUDE_AT_LEAST_ONE_LOWERCASE_LETTER_ONE_UPPERCASE_LETTER_ONE_NUMBER_AND_ONE_SPECIAL_CHARACTER": "Password must be at least 8 characters long and include at least one lowercase letter, one uppercase letter, one number, and one special character (@$!%*?&#).",
   "PASSWORD_CANNOT_EXCEED_15_CHARACTERS_LONG_AND_INCLUDE_AT_LEAST_ONE_LOWERCASE_LETTER_ONE_UPPERCASE_LETTER_ONE_NUMBER_AND_ONE_SPECIAL_CHARACTER": "Password cannot exceed 15 characters long and include at least one lowercase letter, one uppercase letter, one number, and one special character (@$!%*?&#).",
   "PASSWORD_MUST_BE_STRING": "Password must be string",
+  "PASSWORD_MUST_INCLUDE_AT_LEAST_ONE_LOWERCASE_LETTER_ONE_UPPERCASE_LETTER_ONE_NUMBER_AND_ONE_SPECIAL_CHARACTER":"Password must include at least one lowercase letter , one uppercase letter , one number and one special character.",
 
   "CONFIRM_PASSWORD_MUST_BE_STRING": "Confirm Password must be string",
   "CONFIRM_PASSWORD_IS_REQUIRED": "Confirm Password is required",
@@ -54,6 +55,10 @@
   "USERNAME_IS_NOT_AVAILABLE": "Username is not available",
   "USERNAME_IS_AVAILABLE": "Username is available",
 
+  "INVALID_GENDER":"Invalid Gender.",
+  "PHONE_NUMBER_IS_INVALID":"Please Enter a Valid Phone Number",
+  "COUNTRY_CODE_MUST_BE_ISO_2":"Country Code muse be ISO Format",
+
   "FIELD_REQUIRED": "{{field}} is required",
   "FIELD_MUST_BE_STRING": "{{field}} must be a string",
   "FIELD_MIN_LENGTH": "{{field}} must be at least {{min}} characters",
@@ -63,5 +68,23 @@
   "FIELD_USERNAME": "Username",
   "FIELD_PASSWORD": "Password",
   "FIELD_CONFIRM_PASSWORD": "Confirm Password",
-  "FIELD_COMPANY_NAME": "Company Name"
+  "FIELD_COMPANY_NAME": "Company Name",
+  "FIELD_FIRST_NAME":"First Name",
+  "FIELD_LAST_NAME":"Last Name",
+  "FIELD_GENDER":"Gender",
+  "FIELD_COUNTRY":"Country",
+  "FIELD_DESCRIPTION_OF_COMPANY":"Description of Company",
+  "FIELD_PHONE":"Phone",
+  "FIELD_ALTERNATE_PHONE":"Alternate Phone",
+  "FIELD_MAIN_ADDRESS_STREET":"Main Address Street",
+  "FIELD_MAIN_ADDRESS_NO":"Main Address No",
+  "FIELD_MAIN_ADDRESS_POST_CODE":"Main Address Post Code",
+  "FIELD_MAIN_ADDRESS_CITY":"Main Address City",
+  "FIELD_BILLING_ADDRESS_STREET":"Billing Address Street",
+  "FIELD_BILLING_ADDRESS_NO":"Billing Address No",
+  "FIELD_BILLING_ADDRESS_POST_CODE":"Billing Address Post Code",
+  "FIELD_BILLING_ADDRESS_CITY":"Billing Address City",
+  "FIELD_VATID":"VAT Id",
+  "FIELD_COUNTRY_CODE":"Country Code"
+
 }
