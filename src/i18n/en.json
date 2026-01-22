@@ -61,6 +61,16 @@
 
   "USER_DETAILS_SAVED_SUCCESSFULLY":"User details saved successfully.",
 
+  "NICKNAME_SAVED_SUCESSFULLY":"Nick Name Saved Successfully.",
+  "PERSONAL_DETAILS_SAVED_SUCCESSFULLY":"Personal details Saved Successfully.",
+  "USER_NOT_COMPLETED_THE_REGISTRATION_PROCESS":"User Not Completed Registration process, Kindly Complete it.",
+  "YOUR_ACCOUNT_HAS_BEEN_DELETED":"Your account has been deleted. Please contact support for more information.",
+  "INVALID_PASSWORD":"Invalid Password!!!",
+  "USER_LOGGED_IN_SUCCESSFULLY":"User logged in successfully.",
+  "AN_OTP_HAS_BEEN_SEND_TO_YOUR_EMAIL":"An otp has been send to your email!!! Kindly check.",
+  "PASSWORD_UPDATED_SUCCESSFULLY":"Password Updated Successfully.",
+
+
   "FIELD_REQUIRED": "{{field}} is required",
   "FIELD_MUST_BE_STRING": "{{field}} must be a string",
   "FIELD_MIN_LENGTH": "{{field}} must be at least {{min}} characters",
@@ -87,6 +97,7 @@
   "FIELD_BILLING_ADDRESS_POST_CODE":"Billing Address Post Code",
   "FIELD_BILLING_ADDRESS_CITY":"Billing Address City",
   "FIELD_VATID":"VAT Id",
-  "FIELD_COUNTRY_CODE":"Country Code"
+  "FIELD_COUNTRY_CODE":"Country Code",
+  "FIELD_NICKNAME":"Nick Name"
 
 }

@@ -25,7 +25,7 @@ app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(express.static("public"));
 app.use(cookieParser());
 
-app.use("/api", languageMiddleware, routes);
+app.use("/api/v1/", languageMiddleware, routes);
 app.get("/", (req, res) => {
   res.send("Testing .....");
 });

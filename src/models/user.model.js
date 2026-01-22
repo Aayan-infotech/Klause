@@ -54,15 +54,26 @@ const userSchema = new mongoose.Schema(
 
     companyName: { type: String, trim: true },
     companyDescription: { type: String, trim: true },
+    
 
-    contactData: {
-      phone: { type: String, trim: true },
-      alternativePhone: { type: String, trim: true },
-    },
+    phone: { type: String, trim:true},
+    alternatePhone: { type: String , trim:true},
+
+    mainAddressStreet:{type:String,trim:true},
+    mainAddressNo:{type:String,trim:true},
+    mainAddressPostCode:{type:String,trim:true},
+    mainAddressCity:{type:String,trim:true},
+
+    billingAddressStreet:{type:String,trim:true},
+    billingAddressNo:{type:String,trim:true},
+    billingAddressPostCode:{type:String,trim:true},
+    billingAddressCity:{type:String,trim:true},
 
     VATId: { type: String, trim: true },
-    countryCode: { type: String, trim: true },
+    CountryCode: { type: String, trim: true },
     nickName: { type: String, trim: true },
+
+
 
     registrationStep: {
       type: Number,

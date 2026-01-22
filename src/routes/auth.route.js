@@ -7,26 +7,61 @@ import {
   createCredential,
   usernameAvailability,
   saveOwnerDetails,
+  savenickName,
+  saveUserDetails,
+  login,
+  forgotPassword,
+  setPassword,
 } from "../controllers/auth.controller.js";
 import { validateRequest } from "../middlewares/validation.middleware.js";
 import {
   createCredentialsValidationSchema,
+  nickNameSchema,
   ownerDetailsSchema,
-  // loginValidationSchema,
+  userDetailsSchema,
   userValidationSchema,
+  loginValidationSchema,
 } from "../validators/userValidator.js";
 import { authenticatedUser } from "../middlewares/auth.middleware.js";
 // import { checkVersion } from "../middlewares/checkVersion.js";
 
-
 const router = Router();
 
 router.route("/signup").post(validateRequest(userValidationSchema), signup);
-router.post("/verify-otp",verifyOtp);
+router.post("/verify-otp", verifyOtp);
 router.post("/resend-otp", resendOTP);
-router.post("/joinAs",authenticatedUser,joinAs);
-router.post("/create-credientials", authenticatedUser, validateRequest(createCredentialsValidationSchema),createCredential);
-router.get('/username-availability/:username', authenticatedUser, usernameAvailability);
-router.post('/save-owner-details',authenticatedUser,validateRequest(ownerDetailsSchema),saveOwnerDetails);
+router.post("/joinAs", authenticatedUser, joinAs);
+router.post(
+  "/create-credientials",
+  authenticatedUser,
+  validateRequest(createCredentialsValidationSchema),
+  createCredential
+);
+router.get(
+  "/username-availability/:username",
+  authenticatedUser,
+  usernameAvailability
+);
+router.post(
+  "/save-owner-details",
+  authenticatedUser,
+  validateRequest(ownerDetailsSchema),
+  saveOwnerDetails
+);
+router.post(
+  "/set-nickName",
+  authenticatedUser,
+  validateRequest(nickNameSchema),
+  savenickName
+);
+router.post(
+  "/save-personal-details",
+  authenticatedUser,
+  validateRequest(userDetailsSchema),
+  saveUserDetails
+);
+router.post("/login", validateRequest(loginValidationSchema), login);
+router.post("/forgot-password",validateRequest(userValidationSchema),forgotPassword);
+router.post('/set-password',validateRequest(loginValidationSchema),setPassword);
 
 export default router;

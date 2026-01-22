@@ -14,5 +14,23 @@ const emailTamplates = {
         Via Menu 2.0 Team
     `,
   }),
+  forgotPasswordOTP: (name, otp) => ({
+    subject: "Reset Your Password - OTP Verification",
+    body: `
+      Hi ${name},
+      
+      We received a request to reset your password.
+      
+      Your One-Time Password (OTP) for password reset is: ${otp}
+
+      Please use this code to reset your password. 
+      Note: This OTP will expire in 10 minutes. 
+
+      If you didn't request this, please ignore this email.
+
+      Thank you,  
+      Via Menu 2.0 Team
+    `,
+  }),
 };
 export { emailTamplates };

@@ -267,7 +267,7 @@ const saveOwnerDetails = asyncHandler(async (req, res) => {
   user.lastName = lastName;
   user.gender = gender;
   user.country = country;
-  user.descriptionOfCompany = descriptionOfCompany;
+  user.companyDescription = descriptionOfCompany;
   user.phone = phone;
   user.alternatePhone = alternatePhone;
   user.mainAddressStreet = mainAddressStreet;
@@ -280,11 +280,153 @@ const saveOwnerDetails = asyncHandler(async (req, res) => {
   user.billingAddressCity = billingAddressCity;
   user.VATId = VATId;
   user.CountryCode = CountryCode;
+  user.registrationStep = 5;
+  user.isRegistered = true;
   user.save();
 
   return res
     .status(200)
-    .json(new ApiResponse(200, "USER_DETAILS_SAVED_SUCCESSFULLY", req.lang, user));
+    .json(
+      new ApiResponse(200, "USER_DETAILS_SAVED_SUCCESSFULLY", req.lang, user)
+    );
+});
+
+const savenickName = asyncHandler(async (req, res) => {
+  const { nickName } = req.body;
+  const user = req.user;
+  user.nickName = nickName;
+  user.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "NICKNAME_SAVED_SUCESSFULLY", req.lang, user));
+});
+
+const saveUserDetails = asyncHandler(async (req, res) => {
+  const { firstName, lastName, phone, gender, country } = req.body;
+  const user = req.user;
+
+  user.firstName = firstName;
+  user.lastName = lastName;
+  user.gender = gender;
+  user.phone = phone;
+  user.country = country;
+  user.isRegistered = true;
+  user.registrationStep = 5;
+  user.save();
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        "PERSONAL_DETAILS_SAVED_SUCCESSFULLY",
+        req.lang,
+        user
+      )
+    );
+});
+
+const login = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+  // check the user
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new ApiError(404, "USER_NOT_FOUND", req.lang);
+  }
+  if (!user.isRegistered) {
+    throw new ApiError(
+      403,
+      "USER_NOT_COMPLETED_THE_REGISTRATION_PROCESS",
+      req.lang
+    );
+  }
+  if (user.isDeleted) {
+    // Your account has been deleted. Please contact support for more information.
+    throw new ApiError(400, "YOUR_ACCOUNT_HAS_BEEN_DELETED", req.lang);
+  }
+
+  const isValidPassword = await user.isPasswordCorrect(password);
+  if (!isValidPassword) {
+    throw new ApiError(403, "INVALID_PASSWORD", req.lang);
+  }
+
+  //
+  const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
+    user._id
+  );
+
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  return res
+    .status(200)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .json(
+      new ApiResponse(200, "USER_LOGGED_IN_SUCCESSFULLY", req.lang, {
+        accessToken,
+        refreshToken,
+      })
+    );
+});
+
+const forgotPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+  // check user
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new ApiError(404, "USER_NOT_FOUND", req.lang);
+  }
+  if (!user.isRegistered) {
+    throw new ApiError(
+      403,
+      "USER_NOT_COMPLETED_THE_REGISTRATION_PROCESS",
+      req.lang
+    );
+  }
+
+  const otp = await generateOTP(6);
+  const name =
+    [user?.firstName, user?.lastName].filter(Boolean).join(" ") || "User";
+
+  const emailTemplate = emailTamplates.forgotPasswordOTP(name, otp);
+
+  const emailResponse = await sendEmail({
+    email: email,
+    subject: emailTemplate.subject,
+    body: emailTemplate.body,
+  });
+
+  if (!emailResponse.success) {
+    throw new ApiError(500, "FAILED_TO_SEND_OTP_TO_EMAIL", req.lang);
+  }
+
+  user.otp = otp;
+  user.otpExpire = Date.now() + 10 * 60 * 1000;
+  user.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "AN_OTP_HAS_BEEN_SEND_TO_YOUR_EMAIL", req.lang));
+});
+
+const setPassword = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new ApiError(404, "USER_NOT_FOUND", req.lang);
+  }
+
+  user.password = password;
+  user.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "PASSWORD_UPDATED_SUCCESSFULLY", req.lang));
 });
 
 export {
@@ -295,4 +437,9 @@ export {
   createCredential,
   usernameAvailability,
   saveOwnerDetails,
+  savenickName,
+  saveUserDetails,
+  login,
+  forgotPassword,
+  setPassword,
 };

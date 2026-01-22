@@ -21,5 +21,6 @@ export const FIELD_LABELS = {
   billingAddressPostCode:"FIELD_BILLING_ADDRESS_POST_CODE",
   billingAddressCity:"FIELD_BILLING_ADDRESS_CITY",
   VATId:"FIELD_VATID",
-  CountryCode:"FIELD_COUNTRY_CODE"
+  CountryCode:"FIELD_COUNTRY_CODE",
+  nickName:"FIELD_NICKNAME",
 };
