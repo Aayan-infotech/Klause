@@ -1,39 +1,29 @@
-import { asyncHandler } from "../utils/asyncHandler.js";
-import { User } from "../models/user.model.js";
-import { ApiError } from "../utils/ApiError.js";
-import { ApiResponse } from "../utils/ApiResponse.js";
+import { asyncHandler } from "../../utils/asyncHandler.js";
+import { User } from "../../models/users/user.model.js";
+import { ApiError } from "../../utils/ApiError.js";
+import { ApiResponse } from "../../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
-import { loadConfig } from "../config/loadConfig.js";
-import { sendEmail } from "../utils/sendEmail.js";
-import { generateOTP } from "../utils/helperFunctions.js";
-import { emailTamplates } from "../utils/emailTemplate.js";
-import { verify } from "crypto";
-import { checkUsernameAvailability } from "../services/userAvailability.service.js";
+import { loadConfig } from "../../config/loadConfig.js";
+import { sendEmail } from "../../utils/sendEmail.js";
+import { generateOTP } from "../../utils/helperFunctions.js";
+import { emailTamplates } from "../../utils/emailTemplate.js";
+import { checkUsernameAvailability } from "../../services/userAvailability.service.js";
 
 const secret = await loadConfig();
 
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
     const user = await User.findById(userId);
-    if (!user) {
-      throw new ApiError(404, "User not found");
-    }
-
     const accessToken = user.generateAccessToken();
-    let refreshToken = user.refreshToken;
-    try {
-      jwt.verify(refreshToken, secret.REFRESH_TOKEN_SECRET);
-    } catch (error) {
-      refreshToken = user.generateRefreshToken();
-      user.refreshToken = refreshToken;
-      await user.save({ validateBeforeSave: false });
-    }
-
+    const refreshToken = user.generateRefreshToken();
+    user.refreshToken = refreshToken;
+    await user.save({ validateBeforeSave: false });
     return { accessToken, refreshToken };
   } catch (error) {
     throw new ApiError(
       500,
-      "Something went wrong while generating refresh and access token"
+      "Something went wrong while generating refresh and access token",
+      req.lang
     );
   }
 };
@@ -47,110 +37,135 @@ const signup = asyncHandler(async (req, res) => {
   const { email } = req.body;
   const userEmail = email.toLowerCase();
 
-  const user = await User.findOne({ email: userEmail, isRegistered: true });
+  const registeredUser = await User.findOne({
+    email: userEmail,
+    isRegistered: true,
+  });
 
-  if (user) {
+  if (registeredUser) {
     throw new ApiError(
       400,
-      "Email is already registered. Please use a different email. Go to Login to proceed further."
+      "EMAIL_IS_ALREADY_REGISTERED_PLEASE_USE_A_DIFFERENT_EMAIL_GO_TO_LOGIN_TO_PROCEED_FURTHER",
+      req.lang
     );
   }
 
-  let nextStep = 2;
-
-  const verifiedEmailUser = await User.findOne({
+  let user = await User.findOne({
     email: userEmail,
-    isEmailVerified: true,
     isRegistered: false,
   });
-  if (!verifiedEmailUser) {
-    const otp = await generateOTP(6);
 
-    const emailTemplate = emailTamplates.signupOTP(otp);
+  if (user && user.otpExpire && user.otpExpire > Date.now()) {
+    throw new ApiError(
+      400,
+      "AN_OTP_IS_ALREADY_SHARED_ON_YOUR_EMAIL_KINDLY_TRY_AFTER_SOME_TIME",
+      req.lang
+    );
+  }
 
-    const emailResponse = await sendEmail({
-      email: userEmail,
-      subject: emailTemplate.subject,
-      body: emailTemplate.body,
-    });
+  const otp = await generateOTP(6);
+  const emailTemplate = emailTamplates.signupOTP(otp);
 
-    if (!emailResponse.success) {
-      throw new ApiError(500, "FAILED_TO_SEND_OTP_TO_EMAIL", req.lang);
-    }
+  const emailResponse = await sendEmail({
+    email: userEmail,
+    subject: emailTemplate.subject,
+    body: emailTemplate.body,
+  });
 
-    // update the OTP and its expiry time in the database
-    let existingUser = await User.findOne({
-      email: userEmail,
-      isRegistered: false,
-    });
-    if (existingUser) {
-      existingUser.otp = otp;
-      existingUser.otpExpire = Date.now() + 10 * 60 * 1000;
-      existingUser.isRegistered = false;
-      existingUser.updatedAt = Date.now();
-      existingUser.registrationStep = 1;
-      await existingUser.save({ validateBeforeSave: false });
-    } else {
-      const newUser = new User({
-        email: userEmail,
-        otp: otp,
-        otpExpire: Date.now() + 10 * 60 * 1000,
-        isRegistered: false,
-        registrationStep: 1,
-      });
-      await newUser.save({ validateBeforeSave: false });
-    }
+  if (!emailResponse.success) {
+    throw new ApiError(500, "FAILED_TO_SEND_OTP_TO_EMAIL", req.lang);
+  }
+
+  const otpExpire = Date.now() + 10 * 60 * 1000; // 10 mins
+
+  if (user) {
+    user.otp = otp;
+    user.otpExpire = otpExpire;
+    user.registrationStep = 1;
+    user.updatedAt = Date.now();
+    await user.save({ validateBeforeSave: false });
   } else {
-    nextStep = 3;
+    await User.create({
+      email: userEmail,
+      otp,
+      otpExpire,
+      isRegistered: false,
+      registrationStep: 1,
+    });
   }
 
   return res.status(200).json(
     new ApiResponse(200, "OTP_SENT_TO_EMAIL_SUCCESSFULLY", req.lang, {
       email: userEmail,
-      nextStep: nextStep,
+      nextStep: 2,
     })
   );
 });
 
 const verifyOtp = asyncHandler(async (req, res) => {
-  const { email, otp } = req.body;
-  if (!email || !otp) {
-    throw new ApiError(400, EMAIL_AND_OTP_ARE_REQUIRED, req.lang);
+  const { email, otp, type } = req.body;
+
+  if (!email || !otp || !type) {
+    if (!email) {
+      throw new ApiError(400, "EMAIL_IS_REQUIRED", req.lang);
+    } else if (!otp) {
+      throw new ApiError(400, "OTP_IS_REQUIRED", req.lang);
+    } else if (!type) {
+      throw new ApiError(400, "TYPE_IS_REQUIRED", req.lang);
+    } else {
+      throw new ApiError(400, "EMAIL_OTP_AND_TYPE_ARE_REQUIRED", req.lang);
+    }
   }
 
-  const user = await User.findOne({ email: email });
+  if (!["sign-up", "forgot-password"].includes(type)) {
+    throw new ApiError(400, "INVALID_OTP_VERIFICATION_TYPE", req.lang);
+  }
+
+  const userEmail = email.toLowerCase();
+
+  const user = await User.findOne({ email: userEmail });
 
   if (!user) {
     throw new ApiError(404, "USER_NOT_FOUND", req.lang);
   }
 
-  if (user.otp != otp) {
+  if (!user.otp || String(user.otp) !== String(otp)) {
     throw new ApiError(400, "INVALID_OTP", req.lang);
   }
-  //  check if otp is expired
 
-  if (new Date() > user.otpExpire) {
+  if (!user.otpExpire || Date.now() > user.otpExpire) {
     throw new ApiError(400, "OTP_EXPIRED", req.lang);
   }
 
   user.otp = null;
   user.otpExpire = null;
-  user.isEmailVerified = true;
-  user.registrationStep = 2;
-  await user.save();
 
-  // generate access and refresh tokens
-  const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
-    user._id
-  );
+  if (type === "sign-up") {
+    user.isEmailVerified = true;
+    user.registrationStep = 2;
 
-  return res.status(200).json(
-    new ApiResponse(200, "OTP_VERIFIED_SUCCESSFULLY", req.lang, {
-      accessToken,
-      refreshToken,
-      nextStep: 3,
-    })
-  );
+    await user.save({ validateBeforeSave: false });
+
+    const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
+      user._id
+    );
+
+    return res.status(200).json(
+      new ApiResponse(200, "OTP_VERIFIED_SUCCESSFULLY", req.lang, {
+        accessToken,
+        refreshToken,
+        nextStep: 3,
+      })
+    );
+  }
+
+  if (type === "forgot-password") {
+    await user.save({ validateBeforeSave: false });
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, "OTP_VERIFIED_SUCCESSFULLY", req.lang));
+  }
 });
 
 const resendOTP = asyncHandler(async (req, res) => {
@@ -168,15 +183,33 @@ const resendOTP = asyncHandler(async (req, res) => {
   user.otp = otp;
   user.otpExpire = new Date(Date.now() + 10 * 60 * 1000);
   await user.save();
-  const emailTemplate = emailTamplates.signupOTP(otp);
 
-  const emailResponse = await sendEmail({
-    email: email,
-    subject: emailTemplate.subject,
-    body: emailTemplate.body,
-  });
-  if (!emailResponse.success) {
-    throw new ApiError(500, "FAILED_TO_SEND_OTP_TO_EMAIL", req.lang);
+  if (user.isRegistered) {
+    const emailTemplate = emailTamplates.signupOTP(otp);
+
+    const emailResponse = await sendEmail({
+      email: email,
+      subject: emailTemplate.subject,
+      body: emailTemplate.body,
+    });
+    if (!emailResponse.success) {
+      throw new ApiError(500, "FAILED_TO_SEND_OTP_TO_EMAIL", req.lang);
+    }
+  } else {
+    const name =
+      [user?.firstName, user?.lastName].filter(Boolean).join(" ") || "User";
+
+    const emailTemplate = emailTamplates.forgotPasswordOTP(name, otp);
+
+    const emailResponse = await sendEmail({
+      email: email,
+      subject: emailTemplate.subject,
+      body: emailTemplate.body,
+    });
+
+    if (!emailResponse.success) {
+      throw new ApiError(500, "FAILED_TO_SEND_OTP_TO_EMAIL", req.lang);
+    }
   }
 
   return res.status(200).json(
@@ -187,38 +220,43 @@ const resendOTP = asyncHandler(async (req, res) => {
 });
 
 const joinAs = asyncHandler(async (req, res) => {
-  const { email, role } = req.body;
-  const user = req.user;
+  const { role } = req.body;
   if (!role) {
     throw new ApiError(400, "ROLE_IS_REQUIRED", req.lang);
   }
   if (!["owner", "manager", "guest"].includes(role)) {
     throw new ApiError(400, "INVALID_ROLE", req.lang);
   }
-
+  const registrationStep = 3;
+  const user = await User.findById(req.user._id);
   user.role = role;
-  user.registrationStep = 3;
+  user.registrationStep = registrationStep;
   await user.save();
 
-  return res
-    .status(200)
-    .json(new ApiResponse(200, "ROLE_JOINED_SUCCESSFULLY", req.lang, user));
+  return res.status(200).json(
+    new ApiResponse(200, "ROLE_JOINED_SUCCESSFULLY", req.lang, {
+      role,
+      registrationStep,
+    })
+  );
 });
 
 const createCredential = asyncHandler(async (req, res) => {
   const { username, password } = req.body;
-  const user = req.user;
+  const registrationStep = 4;
 
+  const user = await User.findById(req.user._id);
   user.username = username;
   user.password = password;
-  user.registrationStep = 4;
+  user.registrationStep = registrationStep;
   await user.save();
 
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(200, "CREDENTIALS_CREATED_SUCCESSFULLY", req.lang, user)
-    );
+  return res.status(200).json(
+    new ApiResponse(200, "CREDENTIALS_CREATED_SUCCESSFULLY", req.lang, {
+      username,
+      registrationStep,
+    })
+  );
 });
 
 const usernameAvailability = asyncHandler(async (req, res) => {
@@ -260,7 +298,7 @@ const saveOwnerDetails = asyncHandler(async (req, res) => {
     CountryCode,
   } = req.body;
 
-  const user = req.user;
+  const user = await User.findById(req.user._id);
 
   user.companyName = companyName;
   user.firstName = firstName;
@@ -293,7 +331,7 @@ const saveOwnerDetails = asyncHandler(async (req, res) => {
 
 const savenickName = asyncHandler(async (req, res) => {
   const { nickName } = req.body;
-  const user = req.user;
+  const user = await User.findById(req.user._id);
   user.nickName = nickName;
   user.save();
 
@@ -304,7 +342,7 @@ const savenickName = asyncHandler(async (req, res) => {
 
 const saveUserDetails = asyncHandler(async (req, res) => {
   const { firstName, lastName, phone, gender, country } = req.body;
-  const user = req.user;
+  const user = await User.findById(req.user._id);
 
   user.firstName = firstName;
   user.lastName = lastName;
@@ -352,7 +390,6 @@ const login = asyncHandler(async (req, res) => {
     throw new ApiError(403, "INVALID_PASSWORD", req.lang);
   }
 
-  //
   const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
     user._id
   );
@@ -429,6 +466,42 @@ const setPassword = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, "PASSWORD_UPDATED_SUCCESSFULLY", req.lang));
 });
 
+const refreshAccessToken = asyncHandler(async (req, res) => {
+  const incomingRefreshToken = req.body.refreshToken;
+  if (!incomingRefreshToken) {
+    throw new ApiError(404, "INVALID_TOKEN", req.lang);
+  }
+
+  const decodedToken = jwt.verify(
+    incomingRefreshToken,
+    secret.REFRESH_TOKEN_SECRET
+  );
+
+  const user = await User.findById(decodedToken?._id);
+  if (!user) {
+    throw new ApiError(404, "INVALID_REFRESH_TOKEN", req.lang);
+  }
+
+  if (incomingRefreshToken !== user?.refreshToken) {
+    throw new ApiError(404, "REFRESH_TOKEN_IS_EXPIRED_OR_USED", req.lang);
+  }
+
+  const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
+    user._id
+  );
+
+  return res
+    .status(200)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .json(
+      new ApiResponse(200, "Access Token refreshed Successfully", req.lang, {
+        accessToken,
+        refreshToken,
+      })
+    );
+});
+
 export {
   signup,
   verifyOtp,
@@ -442,4 +515,5 @@ export {
   login,
   forgotPassword,
   setPassword,
+  refreshAccessToken,
 };

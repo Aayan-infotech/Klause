@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { User } from "../models/user.model.js";
+import { User } from "../models/users/user.model.js";
 import { loadConfig } from "../config/loadConfig.js";
 
 const secret = await loadConfig();
@@ -16,21 +16,10 @@ export const authenticatedUser = asyncHandler(async (req, res, next) => {
 
     const decodedToken = jwt.verify(token, secret.ACCESS_TOKEN_SECRET);
 
-    const user = await User.findById(decodedToken?._id).select("-refreshToken");
-
-    if (!user) {
-      throw new ApiError(401, "USER_NOT_FOUND", req.lang);
-    }
-
-    if (user.isDeleted) {
-      throw new ApiError(
-        403,
-        "USER_IS_DEACTIVATED",
-        req.lang
-      );
-    }
-
-    req.user = user;
+    req.user = {
+      _id: decodedToken._id,
+      email: decodedToken.email,
+    };
     next();
   } catch (error) {
     if (error.name === "TokenExpiredError") {

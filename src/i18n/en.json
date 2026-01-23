@@ -20,12 +20,17 @@
   "EMAIL_MUST_BE_VALID": "Email must be valid",
   "EMAIL_FORMAT_IS_INVALID_IT_SHOULD_NOT_START_WITH_SPECIAL_CHARACTERS":
     "Email format is invalid. It should not start with special characters",
+  "EMAIL_IS_ALREADY_REGISTERED_PLEASE_USE_A_DIFFERENT_EMAIL_GO_TO_LOGIN_TO_PROCEED_FURTHER":"Email is already registered. Please use a different email. Go to Login to proceed further.",
+  "AN_OTP_IS_ALREADY_SHARED_ON_YOUR_EMAIL_KINDLY_TRY_AFTER_SOME_TIME":"An OTP is already shared on your email , kindly try after sometime!!!",
 
 
   "FAILED_TO_SEND_OTP_TO_EMAIL": "Failed to send OTP to Email",
   "OTP_SENT_TO_EMAIL_SUCCESSFULLY": "OTP sent to email successfully",
 
   "EMAIL_AND_OTP_ARE_REQUIRED": "Email and OTP are required",
+  "OTP_IS_REQUIRED":"OTP is required",
+  "TYPE_IS_REQUIRED":"Type is required",
+  "INVALID_OTP_VERIFICATION_TYPE":"Invalid otp verification type",
   "INVALID_OTP": "Invalid OTP",
   "OTP_EXPIRED": "OTP Expired",
   "OTP_VERIFIED_SUCCESSFULLY": "OTP verified successfully",
@@ -69,6 +74,8 @@
   "USER_LOGGED_IN_SUCCESSFULLY":"User logged in successfully.",
   "AN_OTP_HAS_BEEN_SEND_TO_YOUR_EMAIL":"An otp has been send to your email!!! Kindly check.",
   "PASSWORD_UPDATED_SUCCESSFULLY":"Password Updated Successfully.",
+  "REFRESH_TOKEN_IS_EXPIRED_OR_USED":"Refresh token is expired or used.",
+  "INVALID_REFRESH_TOKEN":"Invalid Refresh Token",
 
 
   "FIELD_REQUIRED": "{{field}} is required",

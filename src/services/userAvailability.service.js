@@ -1,7 +1,7 @@
 import redis from "../config/redis.js";
-import { User } from "../models/user.model.js";
+import { User } from "../models/users/user.model.js";
 
-const USERNAME_TTL = 60 * 5; 
+const USERNAME_TTL = 60 * 5;
 
 export const checkUsernameAvailability = async (username) => {
   username = username.toLowerCase().trim();

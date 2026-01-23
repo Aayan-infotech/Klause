@@ -9,7 +9,7 @@ import { loadConfig } from "./config/loadConfig.js";
 import redis from "./config/redis.js";
 
 const secret = await loadConfig();
-
+await redis.ping();
 const app = express();
 
 app.use(

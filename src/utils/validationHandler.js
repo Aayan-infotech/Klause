@@ -7,17 +7,10 @@ const validateSchema = async (schema, data, lang = "en") => {
     return null;
   } catch (error) {
     if (error.isJoi) {
-      console.log(error);
       const detail = error.details[0];
-
-      const messageKey = detail.message; 
-      console.log("messageKey",messageKey)
-      const fieldName = detail.path[0]; 
-      console.log("fieldName",fieldName);
-
-      const fieldLabelKey =
-        FIELD_LABELS[fieldName] || fieldName;
-      console.log("fieldLabelKey",fieldLabelKey)
+      const messageKey = detail.message;
+      const fieldName = detail.path[0];
+      const fieldLabelKey = FIELD_LABELS[fieldName] || fieldName;
       return t(lang, messageKey, {
         field: t(lang, fieldLabelKey),
         min: detail.context?.limit,
