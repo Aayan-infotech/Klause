@@ -75,6 +75,20 @@
   "ADMIN_LOGGED_IN_SUCCESSFULLY": "Admin Logged In Successfully.",
   "SOMETHING_WENT_WRONG_WHILE_GENERATING_REFRESH_AND_ACCESS_TOKEN": "Something went wrong while generating refresh and access token",
   "NEW_PASSWORD_CANNOT_BE_SAME_AS_OLD_PASSWORD": "New password cannot be the same as old password",
+  "RESTAURANT_TYPE_IS_ALREADY_EXISTS": "Restaurant Type is already exists.",
+  "RESTAURANT_TYPE_IS_CREATED_SUCCESSFULLY": "Restaurant type is created successfully.",
+  "RESTAURANT_TYPES_FETCHED_SUCCESSFULLY":"Restaurant type fetched successfully.",
+  "NO_RESTAURANT_TYPES_FOUND":"No Restaurant types found!!!",
+  "RESTAURANT_TYPE_UPDATED_SUCCESSFULLY": "Restaurant type updated successfully",
+  "RESTAURANT_TYPE_DELETED_SUCCESSFULLY": "Restaurant type deleted successfully",
+  "RESTAURANT_TYPE_DEACTIVATED_SUCCESSFULLY": "Restaurant type deactivated successfully",
+  "RESTAURANT_TYPE_NOT_FOUND": "Restaurant type not found",
+  "INVALID_ID": "Invalid ID",
+  "INVALID_STATUS_VALUE":"Invalid status value",
+
+  "INVALID_RESTAURANT_TYPE_ID":"Invalid Restaurant Type Id",
+  "AT_LEAST_ONE_FIELD_IS_REQUIRED_TO_UPDATE":"At Least One Field is Required to update",
+
 
   "FIELD_REQUIRED": "{{field}} is required",
   "FIELD_MUST_BE_STRING": "{{field}} must be a string",

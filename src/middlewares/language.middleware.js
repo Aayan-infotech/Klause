@@ -4,6 +4,6 @@ export const languageMiddleware = (req, res, next) => {
     req.query.lang ||
     "en";
 
-  req.lang = ["en", "hi", "de", "fr", "es", "it"].includes(lang) ? lang : "en";
+  req.lang = ["en", "de", "fr", "es", "it"].includes(lang) ? lang : "en";
   next();
 };

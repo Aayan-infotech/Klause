@@ -2,6 +2,7 @@ import { t } from "../i18n/index.js";
 
 class ApiResponse {
   constructor(statusCode, messageKey = "SUCCESS", lang, data = null) {
+    console.log("data",data);
     this.statusCode = statusCode;
     this.data = data;
     this.message = t(lang, messageKey);

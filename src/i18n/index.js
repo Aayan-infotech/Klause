@@ -11,7 +11,6 @@ const loadLang = (file) => {
 
 const languages = {
   en: loadLang("en.json"),
-  hi: loadLang("hi.json"),
   de: loadLang("de.json"),
   fr: loadLang("fr.json"),
   es: loadLang("es.json"),

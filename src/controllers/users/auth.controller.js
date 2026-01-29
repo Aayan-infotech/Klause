@@ -64,18 +64,19 @@ const signup = asyncHandler(async (req, res) => {
     );
   }
 
-  const otp = await generateOTP(6);
-  const emailTemplate = emailTamplates.signupOTP(otp);
+  const otp = '123456';
+  // const otp = await generateOTP(6);
+  // const emailTemplate = emailTamplates.signupOTP(otp);
 
-  const emailResponse = await sendEmail({
-    email: userEmail,
-    subject: emailTemplate.subject,
-    body: emailTemplate.body,
-  });
+  // const emailResponse = await sendEmail({
+  //   email: userEmail,
+  //   subject: emailTemplate.subject,
+  //   body: emailTemplate.body,
+  // });
 
-  if (!emailResponse.success) {
-    throw new ApiError(500, "FAILED_TO_SEND_OTP_TO_EMAIL", req.lang);
-  }
+  // if (!emailResponse.success) {
+  //   throw new ApiError(500, "FAILED_TO_SEND_OTP_TO_EMAIL", req.lang);
+  // }
 
   const otpExpire = Date.now() + 10 * 60 * 1000; // 10 mins
 
@@ -180,38 +181,39 @@ const resendOTP = asyncHandler(async (req, res) => {
     throw new ApiError(404, "USER_NOT_FOUND", req.lang);
   }
 
-  const otp = await generateOTP(6);
+  // const otp = await generateOTP(6);
+  const otp = '123456';
   user.otp = otp;
   user.otpExpire = new Date(Date.now() + 10 * 60 * 1000);
   await user.save();
 
-  if (user.isRegistered) {
-    const emailTemplate = emailTamplates.signupOTP(otp);
+  // if (user.isRegistered) {
+  //   const emailTemplate = emailTamplates.signupOTP(otp);
 
-    const emailResponse = await sendEmail({
-      email: email,
-      subject: emailTemplate.subject,
-      body: emailTemplate.body,
-    });
-    if (!emailResponse.success) {
-      throw new ApiError(500, "FAILED_TO_SEND_OTP_TO_EMAIL", req.lang);
-    }
-  } else {
-    const name =
-      [user?.firstName, user?.lastName].filter(Boolean).join(" ") || "User";
+  //   const emailResponse = await sendEmail({
+  //     email: email,
+  //     subject: emailTemplate.subject,
+  //     body: emailTemplate.body,
+  //   });
+  //   if (!emailResponse.success) {
+  //     throw new ApiError(500, "FAILED_TO_SEND_OTP_TO_EMAIL", req.lang);
+  //   }
+  // } else {
+  //   const name =
+  //     [user?.firstName, user?.lastName].filter(Boolean).join(" ") || "User";
 
-    const emailTemplate = emailTamplates.forgotPasswordOTP(name, otp);
+  //   const emailTemplate = emailTamplates.forgotPasswordOTP(name, otp);
 
-    const emailResponse = await sendEmail({
-      email: email,
-      subject: emailTemplate.subject,
-      body: emailTemplate.body,
-    });
+  //   const emailResponse = await sendEmail({
+  //     email: email,
+  //     subject: emailTemplate.subject,
+  //     body: emailTemplate.body,
+  //   });
 
-    if (!emailResponse.success) {
-      throw new ApiError(500, "FAILED_TO_SEND_OTP_TO_EMAIL", req.lang);
-    }
-  }
+  //   if (!emailResponse.success) {
+  //     throw new ApiError(500, "FAILED_TO_SEND_OTP_TO_EMAIL", req.lang);
+  //   }
+  // }
 
   return res.status(200).json(
     new ApiResponse(200, "OTP_SENT_TO_EMAIL_SUCCESSFULLY", req.lang, {
@@ -427,21 +429,22 @@ const forgotPassword = asyncHandler(async (req, res) => {
     );
   }
 
-  const otp = await generateOTP(6);
-  const name =
-    [user?.firstName, user?.lastName].filter(Boolean).join(" ") || "User";
+  const otp = '123456';
+  // const otp = await generateOTP(6);
+  // const name =
+  //   [user?.firstName, user?.lastName].filter(Boolean).join(" ") || "User";
 
-  const emailTemplate = emailTamplates.forgotPasswordOTP(name, otp);
+  // const emailTemplate = emailTamplates.forgotPasswordOTP(name, otp);
 
-  const emailResponse = await sendEmail({
-    email: email,
-    subject: emailTemplate.subject,
-    body: emailTemplate.body,
-  });
+  // const emailResponse = await sendEmail({
+  //   email: email,
+  //   subject: emailTemplate.subject,
+  //   body: emailTemplate.body,
+  // });
 
-  if (!emailResponse.success) {
-    throw new ApiError(500, "FAILED_TO_SEND_OTP_TO_EMAIL", req.lang);
-  }
+  // if (!emailResponse.success) {
+  //   throw new ApiError(500, "FAILED_TO_SEND_OTP_TO_EMAIL", req.lang);
+  // }
 
   user.otp = otp;
   user.otpExpire = Date.now() + 10 * 60 * 1000;

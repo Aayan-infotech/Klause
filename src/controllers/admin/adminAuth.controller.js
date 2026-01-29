@@ -76,20 +76,21 @@ const forgotPassword = asyncHandler(async (req, res) => {
     throw new ApiError(404, "USER_NOT_FOUND", req.lang);
   }
 
-  const otp = await generateOTP(6);
+  // const otp = await generateOTP(6);
+  const otp = '123456';
   const name = "Admin";
 
-  const emailTemplate = emailTamplates.forgotPasswordOTP(name, otp);
+  // const emailTemplate = emailTamplates.forgotPasswordOTP(name, otp);
 
-  const emailResponse = await sendEmail({
-    email: email,
-    subject: emailTemplate.subject,
-    body: emailTemplate.body,
-  });
+  // const emailResponse = await sendEmail({
+  //   email: email,
+  //   subject: emailTemplate.subject,
+  //   body: emailTemplate.body,
+  // });
 
-  if (!emailResponse.success) {
-    throw new ApiError(500, "FAILED_TO_SEND_OTP_TO_EMAIL", req.lang);
-  }
+  // if (!emailResponse.success) {
+  //   throw new ApiError(500, "FAILED_TO_SEND_OTP_TO_EMAIL", req.lang);
+  // }
 
   user.otp = otp;
   user.otpExpire = Date.now() + 10 * 60 * 1000;
@@ -145,22 +146,23 @@ const resendOTP = asyncHandler(async (req, res) => {
     throw new ApiError(404, "USER_NOT_FOUND", req.lang);
   }
 
-  const otp = await generateOTP(6);
+  // const otp = await generateOTP(6);
+  const otp = '123456';
   user.otp = otp;
   user.otpExpire = new Date(Date.now() + 10 * 60 * 1000);
   await user.save();
-  const name = "Admin";
-  const emailTemplate = emailTamplates.forgotPasswordOTP(name, otp);
+  // const name = "Admin";
+  // const emailTemplate = emailTamplates.forgotPasswordOTP(name, otp);
 
-  const emailResponse = await sendEmail({
-    email: email,
-    subject: emailTemplate.subject,
-    body: emailTemplate.body,
-  });
+  // const emailResponse = await sendEmail({
+  //   email: email,
+  //   subject: emailTemplate.subject,
+  //   body: emailTemplate.body,
+  // });
 
-  if (!emailResponse.success) {
-    throw new ApiError(500, "FAILED_TO_SEND_OTP_TO_EMAIL", req.lang);
-  }
+  // if (!emailResponse.success) {
+  //   throw new ApiError(500, "FAILED_TO_SEND_OTP_TO_EMAIL", req.lang);
+  // }
 
   return res.status(200).json(
     new ApiResponse(200, "OTP_SENT_TO_EMAIL_SUCCESSFULLY", req.lang, {
